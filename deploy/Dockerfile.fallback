@@ -1,0 +1,19 @@
+# Local source-based fallback for Lumnus v0.30.0-b70.2 when the upstream
+# pinned wu1ff image is unavailable. This is NOT a byte-identical upstream image.
+#
+# Build from a context containing:
+#   ./vllm-b70/  (verified Lumnus patched tree; see docs/BUILD.md)
+#   ./wheels/vllm_xpu_kernels-0.1.14.1+b70.3-*.whl
+#
+# docker build -f deploy/Dockerfile.fallback -t b70-flash-next:lumnus-fallback .
+
+FROM vllm/vllm-openai-xpu@sha256:fc0e112afb64e3a06fe8daff34652435822a629412f38efce8f0f67a46636b8d
+
+COPY wheels/ /tmp/wheels/
+RUN /opt/venv/bin/pip install --no-deps --force-reinstall /tmp/wheels/*.whl
+
+COPY vllm-b70/ /srv/vllm-b70/
+ENV PYTHONPATH=/srv/vllm-b70
+WORKDIR /srv/vllm-b70
+
+ENTRYPOINT ["/opt/venv/bin/python","-m","vllm.entrypoints.openai.api_server"]
