@@ -1,0 +1,24 @@
+# Model artifacts and download caches
+*.safetensors
+*.pt
+*.gguf
+*.bin
+*.whl
+*.tar
+*.tar.gz
+*.zip
+.cache/
+models/
+weights/
+checkpoints/
+runtime-cache/
+Lumnus-cache/
+.env
+.env.*
+*.key
+*.pem
+*.crt
+id_ed25519*
+**/__pycache__/
+*.pyc
+*.log
